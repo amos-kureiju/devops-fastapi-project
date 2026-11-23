@@ -7,7 +7,9 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 FROM python:3.11-slim
 
 WORKDIR /app
-RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* \
+    && pip uninstall -y setuptools wheel pip \
+    && groupadd --system appgroup && useradd --system --gid appgroup appuser
 
 COPY --from=builder /install /usr/local
 COPY ./app ./app
